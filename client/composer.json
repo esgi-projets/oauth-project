@@ -1,0 +1,15 @@
+{
+    "name": "esgi-projets/oauth2-3iw2",
+    "autoload": {
+        "psr-4": {
+            "OAuth2\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alexandre BETTAN & Louis-Antoine JOSEPH-ROTROU",
+            "email": "contact@alexandre.business"
+        }
+    ],
+    "require": {}
+}
