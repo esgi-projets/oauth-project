@@ -146,8 +146,13 @@ class Client
       throw new \Exception('The client_secret is required');
     }
 
+    if (!isset($auth['redirect_uri'])) {
+      throw new \Exception('The redirect_uri is required');
+    }
+
     $client->setClientId($auth['client_id']);
     $client->setClientSecret($auth['client_secret']);
+    $client->setRedirectUri($auth['redirect_uri']);
 
     return $client;
   }

@@ -7,6 +7,7 @@ $client = Client::create(
   [
     'client_id' => '752856717798-0d2hh4pjr8cceeqhmrb9sivvaijneg9i.apps.googleusercontent.com',
     'client_secret' => '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',
+    'redirect_uri' => 'http://localhost:8081/',
   ]
 );
 
