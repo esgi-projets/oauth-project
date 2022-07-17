@@ -2,7 +2,10 @@
 
 namespace OAuth2;
 
+use OAuth2\Clients\FacebookClient;
 use OAuth2\Clients\GoogleClient;
+use OAuth2\Clients\LocalServerClient;
+use OAuth2\Clients\SpotifyClient;
 use OAuth2\Curl as CurlClient;
 
 class Client
@@ -15,6 +18,7 @@ class Client
   private static $_user_info_url;
   private static $_redirect_uri;
   private static $_scope;
+  private static $_state;
 
   private static $_client;
   private static $_headers;
@@ -65,6 +69,11 @@ class Client
   public function getScope()
   {
     return self::$_scope;
+  }
+
+  public function getState()
+  {
+    return self::$_state;
   }
 
   public static function getClient(array $auth = [])
@@ -128,9 +137,29 @@ class Client
     self::$_scope = $scope;
   }
 
+  public function setState(string $state)
+  {
+    self::$_state = $state;
+  }
+
   public function getGoogleClient()
   {
     return new GoogleClient($this);
+  }
+
+  public function getFacebookClient()
+  {
+    return new FacebookClient($this);
+  }
+
+  public function getSpotifyClient()
+  {
+    return new SpotifyClient($this);
+  }
+
+  public function getLocalhostClient()
+  {
+    return new LocalServerClient($this);
   }
 
   // Initialize the connection to the API
@@ -150,9 +179,16 @@ class Client
       throw new \Exception('The redirect_uri is required');
     }
 
+    if (!isset($auth['scope'])) {
+      $client->setScope('');
+    } else {
+      $client->setScope($auth['scope']);
+    }
+
     $client->setClientId($auth['client_id']);
     $client->setClientSecret($auth['client_secret']);
     $client->setRedirectUri($auth['redirect_uri']);
+
 
     return $client;
   }

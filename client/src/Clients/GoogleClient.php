@@ -13,7 +13,7 @@ class GoogleClient extends AbstractClient
     $oauth->setAuthUrl('https://accounts.google.com/o/oauth2/v2/auth');
     $oauth->setTokenUrl('https://oauth2.googleapis.com/token');
     $oauth->setUserInfoUrl('https://www.googleapis.com/oauth2/v1/userinfo');
-    $oauth->setScope($oauth->getScope() ?? 'email');
+    $oauth->setScope($oauth->getScope() ?? '');
 
     parent::__construct($oauth);
   }

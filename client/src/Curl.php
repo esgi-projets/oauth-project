@@ -587,7 +587,7 @@ class Curl
   {
     $processedHeaders = [];
     foreach ($headers as $header) {
-      $processedHeaders[] = urlencode($header[0]) . ': ' . urlencode($header[1]);
+      $processedHeaders[] = urlencode($header[0]) . ': ' . $header[1];
     }
     return $processedHeaders;
   }

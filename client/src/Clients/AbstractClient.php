@@ -39,6 +39,7 @@ abstract class AbstractClient
       'client_id' => $this->_oauth_client->getClientId(),
       'redirect_uri' => $this->_oauth_client->getRedirectUri(),
       'scope' => $this->_oauth_client->getScope(),
+      'state' => $this->_oauth_client->getState(),
       'response_type' => 'code',
     ]);
   }
@@ -48,7 +49,7 @@ abstract class AbstractClient
     $access_token = $this->getAccessToken($code, 'POST');
 
     $headers = [
-      ['Authorization', 'Bearer' . $access_token],
+      ['Authorization', 'Bearer ' . $access_token],
     ];
 
     $this->_oauth_client->setHeaders($headers);

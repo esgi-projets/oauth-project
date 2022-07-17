@@ -72,7 +72,7 @@ function findUserBy($criteria)
 function register()
 {
     ['name' => $name, 'url' => $url, 'redirect_uri' => $redirectUri] = $_POST;
-    if (findAppBy(['name'=> $name])) {
+    if (findAppBy(['name' => $name])) {
         http_response_code(409);
         return;
     }
@@ -87,8 +87,8 @@ function register()
 
 function auth()
 {
-    ['client_id' => $clientId, 'scope'=> $scope, 'state' => $state, 'redirect_uri' => $redirect_uri] = $_GET;
-    $app = findAppBy(['client_id'=> $clientId, 'redirect_uri' => $redirect_uri]);
+    ['client_id' => $clientId, 'scope' => $scope, 'state' => $state, 'redirect_uri' => $redirect_uri] = $_GET;
+    $app = findAppBy(['client_id' => $clientId, 'redirect_uri' => $redirect_uri]);
     if (!$app) {
         http_response_code(404);
         return;
@@ -106,7 +106,7 @@ function auth()
 function authSuccess()
 {
     ['client_id' => $clientId, 'state' => $state] = $_GET;
-    $app = findAppBy(['client_id'=> $clientId]);
+    $app = findAppBy(['client_id' => $clientId]);
     if (!$app) {
         http_response_code(404);
         return;
@@ -115,7 +115,7 @@ function authSuccess()
         "code" => bin2hex(random_bytes(16)),
         "user_id" => 1,
         "client_id" => $clientId,
-        "expiresAt" => time() + (60*5),
+        "expiresAt" => time() + (60 * 5),
     ];
     insertCode($code);
     header("Location: ${app['redirect_uri']}?state=${state}&code=${code['code']}");
@@ -124,7 +124,7 @@ function authSuccess()
 function handleAuthCode($clientId)
 {
     ['code' => $code] = $_GET;
-    $code = findCodeBy(['code' => $code, 'client_id'=> $clientId]);
+    $code = findCodeBy(['code' => $code, 'client_id' => $clientId]);
     if (!$code) {
         throw new \InvalidArgumentException(404);
     }
@@ -148,22 +148,22 @@ function token()
 {
     ['client_id' => $clientId, 'client_secret' => $clientSecret, 'grant_type' => $grantType, 'redirect_uri' => $redirect] = $_GET;
     try {
-        $app = findAppBy(['client_id'=> $clientId, 'client_secret' => $clientSecret, 'redirect_uri' => $redirect]);
+        $app = findAppBy(['client_id' => $clientId, 'client_secret' => $clientSecret, 'redirect_uri' => $redirect]);
         if (!$app) {
             throw new \InvalidArgumentException(401);
         }
 
         $userId = match ($grantType) {
-            'authorization_code'=> handleAuthCode($clientId),
+            'authorization_code' => handleAuthCode($clientId),
             'password' => handlePassword(),
             'client_credentials' => null,
         };
 
         $token = [
             "access_token" => bin2hex(random_bytes(16)),
-            "expiresAt" => time() + (60*60*24*30),
+            "expiresAt" => time() + (60 * 60 * 24 * 30),
             "client_id" => $clientId,
-            "user_id"=> $userId,
+            "user_id" => $userId,
         ];
         insertToken($token);
         http_response_code(201);
