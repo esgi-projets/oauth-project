@@ -2,6 +2,8 @@
 
 namespace OAuth2;
 
+use Error;
+
 /**
  * RESTful cURL class
  *
@@ -395,7 +397,7 @@ class Curl
 
     $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-    if ($responseCode > 400 && $responseCode < 500) {
+    if ($responseCode >= 400 && $responseCode < 500) {
       throw new Error($response->text());
     }
     if ($responseCode > 500) {
@@ -562,6 +564,7 @@ class Curl
     self::applyCurlOption($curl, $this->curlOptions);
     curl_setopt($curl, CURLOPT_HEADERFUNCTION, [&$this, 'handleResponseHeaders']);
     curl_setopt($curl, CURLOPT_HTTPHEADER, self::prepareRequestHeaders($this->requestHeaders));
+    curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
     if ($this->debug) {
       var_dump($this->curlOptions);

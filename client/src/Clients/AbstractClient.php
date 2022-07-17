@@ -20,6 +20,18 @@ abstract class AbstractClient
     return $this->_oauth_client;
   }
 
+  protected function getAccessToken(string $code, string $method = 'GET', $options = [])
+  {
+    $options = array_merge([
+      'code' => $code,
+      'grant_type' => 'authorization_code',
+      'client_id' => $this->_oauth_client->getClientId(),
+      'client_secret' => $this->_oauth_client->getClientSecret(),
+      'redirect_uri' => $this->_oauth_client->getRedirectUri(),
+    ], $options);
+    $response = $this->_oauth_client->call($this->_oauth_client->getTokenUrl(), $method, $options);
+    return json_decode($response->text(), true)['access_token'];
+  }
 
   public function getAuthorizationUrl()
   {
@@ -31,6 +43,20 @@ abstract class AbstractClient
     ]);
   }
 
+  public function getUser($code)
+  {
+    $access_token = $this->getAccessToken($code, 'POST');
+
+    $headers = [
+      ['Authorization', 'Bearer' . $access_token],
+    ];
+
+    $this->_oauth_client->setHeaders($headers);
+
+    $response = $this->_oauth_client->call($this->_oauth_client->getUserInfoUrl(), 'GET');
+
+    return json_decode($response->text(), true);
+  }
 
   public function notSupported()
   {

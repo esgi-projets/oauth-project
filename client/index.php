@@ -13,4 +13,7 @@ $client = Client::create(
 var_dump($client->getGoogleClient()->getAuthorizationUrl());
 
 $code = $_GET['code'];
-var_dump($code);
+
+$user_info = $client->getGoogleClient()->getUser($code);
+
+var_dump($user_info);

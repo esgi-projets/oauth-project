@@ -64,7 +64,7 @@ class Client
 
   public function getScope()
   {
-    return self::$_scope ?? '*';
+    return self::$_scope;
   }
 
   public static function getClient(array $auth = [])
@@ -79,6 +79,7 @@ class Client
   public function getHttpClient()
   {
     $options = [];
+
     return new CurlClient($options);
   }
 
@@ -155,10 +156,12 @@ class Client
   {
     $client = $this->getHttpClient();
 
-    foreach ($this->getHeaders() as $key => $value) {
-      $client->appendRequestHeader($key, $value);
+    if (!empty($this->getHeaders())) {
+      $client->appendRequestHeaders($this->getHeaders());
     }
 
-    return $client->$method($url, $body);
+    $response = $client->$method($url, $body);
+
+    return $response;
   }
 }
